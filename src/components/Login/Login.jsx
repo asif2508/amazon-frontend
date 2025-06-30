@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../../Providers/UserProvider";
 
 const Login = () => {
@@ -9,6 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const {setUser} = useContext(UserContext)
+      const nav = useNavigate()
   const handleSubmit = () => {
     setLoading(true);
     axios
@@ -18,7 +19,9 @@ const Login = () => {
         if (res?.data?.success) {
           // alert(res?.data?.message);
           console.log(res?.data?.data)
-          setUser(res?.data?.data)
+          setUser(res?.data?.data?.user)
+          localStorage.setItem("token", res?.data?.data?.token)
+          nav('/')
         } else {
           alert(res?.data?.message);
         }

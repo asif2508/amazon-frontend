@@ -1,20 +1,25 @@
 import axios from "axios";
 import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../../Providers/UserProvider";
 
 const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false)
+    const {setUser} = useContext(UserContext)
+    const nav = useNavigate()
 
     const handleSubmit = () =>{
         console.log(name, email, password)
         setLoading(true)
         axios.post("http://localhost:5000/api/users/create-user",{name, email, password}).then(res =>{
-            if(res?.data?.status){
-                alert(res?.data?.message)
+            if(res?.data?.success){
+              setUser(res?.data?.data)
+                // alert(res?.data?.message)
+                nav('/')
             }else{
                 alert(res?.data?.message)
             }
