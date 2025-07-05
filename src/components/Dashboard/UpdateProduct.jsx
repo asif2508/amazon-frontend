@@ -1,24 +1,24 @@
 import axios from "axios";
 import {
-  Button,
-  FileInput,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  TextInput,
-  Textarea,
+    Button,
+    Label,
+    Modal,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Select,
+    TextInput,
+    Textarea,
 } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const AddProduct = ({
+const UpdateProduct = ({
   openModal,
   setOpenModal,
   refetch,
   setRefetch,
+  selected,
   categories,
 }) => {
   const [formData, setFormData] = useState({
@@ -30,6 +30,18 @@ const AddProduct = ({
   });
   const [image, setImage] = useState(null);
 
+  useEffect(() => {
+    if (selected) {
+      setFormData({
+        name: selected?.name,
+        price: selected?.price,
+        description: selected?.description,
+        category: selected?.category?._id,
+        quantity: selected?.quantity,
+      });
+    }
+  }, [selected]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -40,21 +52,20 @@ const AddProduct = ({
   };
 
   const handleSubmit = async () => {
-    if(formData?.category === "") return toast.error("Please select a category")
     const data = new FormData();
     data.append("data", JSON.stringify(formData));
-    if (image) {
-      data.append("file", image);
-    }
+    // if (image) {
+    //   data.append("file", image);
+    // }
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/products/create-product",
+        `http://localhost:5000/api/products/update-product-by-id/${selected?._id}`,
         data
       );
 
       if (response.data?.success) {
-        toast.success("Product added successfully!");
+        toast.success("Product updated successfully!");
         setFormData({
           name: "",
           price: "",
@@ -74,11 +85,9 @@ const AddProduct = ({
     }
   };
 
-  console.log(formData)
-
   return (
     <Modal show={openModal} onClose={() => setOpenModal(false)}>
-      <ModalHeader>Add Product</ModalHeader>
+      <ModalHeader>Update Product</ModalHeader>
       <ModalBody>
         <div className="space-y-4">
           <div>
@@ -119,11 +128,17 @@ const AddProduct = ({
           </div>
           <div>
             <Label htmlFor="category" value="Category ID" />
-            <Select onChange={handleInputChange} id="category" name="category" required>
+            <Select
+              value={formData.category}
+              onChange={handleInputChange}
+              id="category"
+              name="category"
+              required
+            >
               <option value="">Select a category</option>
-              {
-                categories?.map(category => <option value={category?._id}>{category?.name}</option>)
-              }
+              {categories?.map((category) => (
+                <option value={category?._id}>{category?.name}</option>
+              ))}
             </Select>
           </div>
           <div>
@@ -138,7 +153,7 @@ const AddProduct = ({
               required
             />
           </div>
-          <div>
+          {/* <div>
             <Label htmlFor="image" value="Product Image" />
             <FileInput
               id="image"
@@ -146,11 +161,11 @@ const AddProduct = ({
               accept="image/*"
               onChange={handleImageChange}
             />
-          </div>
+          </div> */}
         </div>
       </ModalBody>
       <ModalFooter>
-        <Button onClick={handleSubmit}>Add Product</Button>
+        <Button onClick={handleSubmit}>Update Product</Button>
         <Button color="gray" onClick={() => setOpenModal(false)}>
           Cancel
         </Button>
@@ -159,4 +174,4 @@ const AddProduct = ({
   );
 };
 
-export default AddProduct;
+export default UpdateProduct;
