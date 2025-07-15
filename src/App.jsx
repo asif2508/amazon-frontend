@@ -2,6 +2,7 @@ import { Toaster } from "react-hot-toast";
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Cart from "./components/Cart/Cart";
+import Checkout from "./components/Checkout/Checkout";
 import Header from "./components/commons/Header";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DashboardProducts from "./components/Dashboard/DashboardProducts";
@@ -28,6 +29,7 @@ function App() {
               />
             </Route>
             <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
