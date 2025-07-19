@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Cart from "./components/Cart/Cart";
 import Checkout from "./components/Checkout/Checkout";
+import Success from "./components/Checkout/Success";
 import Header from "./components/commons/Header";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DashboardProducts from "./components/Dashboard/DashboardProducts";
@@ -29,6 +30,7 @@ function App() {
               />
             </Route>
             <Route path="/cart" element={<Cart />} />
+            <Route path="/success" element={<Success />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

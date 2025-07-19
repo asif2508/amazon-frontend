@@ -1,6 +1,8 @@
+import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { CartContext } from "../../Providers/GlobalProvider";
-
+import { baseURL } from "../../service/api";
 const Checkout = () => {
     const [total, setTotal] = useState(0);
     const [data, setData] = useState({
@@ -20,7 +22,26 @@ const Checkout = () => {
         setTotal(totalPrice);
     }, [cart]);
 
-    console.log(data)
+    const handleCheckout = async() =>{
+        if(total <= 0){
+            return toast.error("Cart is empty");
+        }
+        if(!data?.name || !data?.email || !data?.address || !data?.city || !data?.country){
+            return toast.error("Please fill all the fields");
+        }
+        const cartItems = cart.map(c=> ({productId: c?._id, quantity: c?.count}));
+        const response = await axios.post(`${baseURL}/order/create-checkout-session`, {
+            cart: cartItems,
+            shipping: data
+        })
+
+        if(response?.data?.success){
+            window.location.href = response?.data?.data
+        }else{
+            toast.error("Failed to create the order!")
+        }
+
+    }
     return (
         <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
@@ -103,7 +124,7 @@ const Checkout = () => {
                             <h4 className="text-lg font-semibold text-gray-800">Total Price:</h4>
                             <p className="text-xl font-bold text-indigo-600">${total.toFixed(2)}</p>
                         </div>
-                        <button className="mt-6 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150">
+                        <button onClick={handleCheckout} className="mt-6 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150">
                             Proceed to Checkout
                         </button>
                     </div>
