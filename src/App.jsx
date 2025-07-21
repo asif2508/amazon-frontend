@@ -7,6 +7,7 @@ import Success from "./components/Checkout/Success";
 import Header from "./components/commons/Header";
 import Dashboard from "./components/Dashboard/Dashboard";
 import DashboardProducts from "./components/Dashboard/DashboardProducts";
+import ManageOrders from "./components/Dashboard/ManageOrders";
 import Stats from "./components/Dashboard/Stats";
 import HomePage from "./components/Home/HomePage";
 import Login from "./components/Login/Login";
@@ -27,6 +28,10 @@ function App() {
               <Route
                 path="/dashboard/manage-products"
                 element={<DashboardProducts />}
+              />
+                <Route
+                path="/dashboard/manage-orders"
+                element={<ManageOrders />}
               />
             </Route>
             <Route path="/cart" element={<Cart />} />
