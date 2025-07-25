@@ -1,21 +1,25 @@
 import axios from "axios";
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeadCell,
-    TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { baseURL } from "../../service/api";
+import OrderDetails from "./OrderDetails";
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [totalPages, setCategories] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState({})
+  const [refetch, setRefetch] = useState(false)
 
   useEffect(() => {
     axios
@@ -31,7 +35,7 @@ const ManageOrders = () => {
           setTotalOrders(res?.data?.data?.totalOrders);
         }
       });
-  }, [page, limit]);
+  }, [page, limit, refetch]);
   return (
     <div>
       <div className="flex justify-between items-center my-[30px]">
@@ -71,7 +75,10 @@ const ManageOrders = () => {
                 <TableCell>{order?.status}</TableCell>
                 <TableCell>
                   <button
-                    // onClick={() => handleUpdate(product)}
+                    onClick={() => {
+                      setSelectedOrder(order)
+                      setOpen(true);
+                    }}
                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                   >
                     View Details
@@ -101,6 +108,7 @@ const ManageOrders = () => {
           </button>
         </div>
       </div>
+      <OrderDetails order={selectedOrder} openModal={open} setOpenModal={setOpen} refetch={refetch} setRefetch={setRefetch} />
     </div>
   );
 };
